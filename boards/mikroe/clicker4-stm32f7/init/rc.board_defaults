@@ -245,7 +245,7 @@ param set-default PCA9685_I2C_ADDR 97
 # Board-tuned target for ~17 ms physical period on this hardware.
 param set-default PCA9685_PWM_FREQ 60.9
 param set-default PCA9685_SCHD_HZ 100
-param set-default PCA9685_DUTY_EN 0
+param set-default PCA9685_DUTY_EN 96
 
 # PCA9685 output functions (driver uses 1-based channel params for HW channels 0..15).
 # CH0/CH1 remain rover drive controls.
@@ -280,9 +280,9 @@ param set-default PCA9685_DIS4 0
 param set-default PCA9685_MIN5 1200
 param set-default PCA9685_MAX5 1800
 param set-default PCA9685_DIS5 0
-param set-default PCA9685_MIN6 1000
-param set-default PCA9685_MAX6 2000
+param set-default PCA9685_MIN6 0
+param set-default PCA9685_MAX6 4096
 param set-default PCA9685_DIS6 0
-param set-default PCA9685_MIN7 1000
-param set-default PCA9685_MAX7 2000
+param set-default PCA9685_MIN7 0
+param set-default PCA9685_MAX7 4096
 param set-default PCA9685_DIS7 0
