@@ -110,6 +110,20 @@ publications:
     type: px4_msgs::msg::GimbalDeviceAttitudeStatus
     rate_limit: 20.
 
+  - topic: /fmu/out/power_monitor
+    type: px4_msgs::msg::PowerMonitor
+    instance: 8
+    rate_limit: 1.
+
+  - topic: /fmu/out/power_monitor
+    type: px4_msgs::msg::PowerMonitor
+    instance: 9
+    rate_limit: 1.
+
+  - topic: /fmu/out/sensor_temp
+    type: px4_msgs::msg::SensorTemp
+    rate_limit: 1.
+
 # Create uORB::Publication
 subscriptions:
   - topic: /fmu/in/register_ext_component_request

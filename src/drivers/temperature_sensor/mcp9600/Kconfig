@@ -1,0 +1,5 @@
+menuconfig DRIVERS_TEMPERATURE_SENSOR_MCP9600
+	bool "MCP9600 thermocouple temperature sensor"
+	default n
+	---help---
+		Enable support for the Microchip MCP9600 thermocouple-to-temperature converter

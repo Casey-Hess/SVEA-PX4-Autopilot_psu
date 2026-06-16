@@ -21,6 +21,16 @@ svea_ina226 -I -b 2 -a 0x4F -r 0.005 -q start
 svea_ina3221 -I -b 2 -a 0x41 -x 0.016 -y 0.001 -z 0.016 -q start
 svea_ina3221 -I -b 2 -a 0x40 -r 0.016 -q start
 
+# SVEA INA238 current monitors: 0x44 and 0x45 claim power_monitor instances 8 and 9.
+# A brief delay lets the earlier INA226/INA3221 drivers complete their first
+# publish cycle so that uORB instance ordering is preserved.
+usleep 50000
+svea_ina238 -I -b 2 -a 0x44 -f start
+svea_ina238 -I -b 2 -a 0x45 -f start
+
+# MCP9600 thermocouple temperature sensor.
+mcp9600 -I -b 2 -a 0x67 -f start
+
 pca9685_pwm_out start -a 0x61 -b 2
 
 # Force both power rails low at boot before power-gate state machine takes over.
@@ -34,4 +44,4 @@ svea_power_gate start
 # Keep 12V buck enabled after startup; delay to allow BQ precharge phase to settle.
 sh -c "sleep 5; gpio write /dev/gpio13 1" &
 
-echo "board sensors mode: auto BQ769x2 + LSM6DSOX + PCAL6524 + INA226(0x4E,0x4F) + INA3221(0x40,0x41) + PCA9685(0x61)"
+echo "board sensors mode: auto BQ769x2 + LSM6DSOX + PCAL6524 + INA226(0x4E,0x4F) + INA3221(0x40,0x41) + INA238(0x44,0x45) + MCP9600(0x67) + PCA9685(0x61)"
