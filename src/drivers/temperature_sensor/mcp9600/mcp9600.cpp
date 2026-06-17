@@ -138,6 +138,12 @@ bool MCP9600::read_temperature(float &temperature_c)
 void MCP9600::RunImpl()
 {
 	if (!_initialized) {
+		// Publish a sentinel so the uORB topic (and the ROS2 topic) stays visible
+		// even while the sensor is not yet connected.
+		_sensor_temp.timestamp   = hrt_absolute_time();
+		_sensor_temp.temperature = -273.15f;
+		_sensor_temp_pub.publish(_sensor_temp);
+
 		if (init() != PX4_OK) {
 			ScheduleDelayed(MCP9600_INIT_RETRY_US);
 		}
