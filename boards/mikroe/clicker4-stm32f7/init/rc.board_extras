@@ -26,6 +26,7 @@ fi
 # Expected instances:
 #  - 0..1: two SVEA INA226 devices
 #  - 2..7: two INA3221 devices x 3 channels each
+#  - 8..9: two SVEA INA238 devices
 mavlink uorb_tunnel add -t power_monitor -i 0 -r 4 -f
 mavlink uorb_tunnel add -t power_monitor -i 1 -r 4 -f
 mavlink uorb_tunnel add -t power_monitor -i 2 -r 4 -f
@@ -34,6 +35,12 @@ mavlink uorb_tunnel add -t power_monitor -i 4 -r 4 -f
 mavlink uorb_tunnel add -t power_monitor -i 5 -r 4 -f
 mavlink uorb_tunnel add -t power_monitor -i 6 -r 4 -f
 mavlink uorb_tunnel add -t power_monitor -i 7 -r 4 -f
+mavlink uorb_tunnel add -t power_monitor -i 8 -r 4 -f
+mavlink uorb_tunnel add -t power_monitor -i 9 -r 4 -f
+
+# Configure PX4_UORB_TUNNEL sensor_temp forwarding.
+# Instance 0: MCP9600 thermocouple sensor.
+mavlink uorb_tunnel add -t sensor_temp -i 0 -r 4 -f
 
 # WS281x/WS2815 on PC9 is available, but do not auto-start at boot.
 # Start manually when needed:
