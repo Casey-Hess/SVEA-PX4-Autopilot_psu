@@ -29,7 +29,7 @@ svea_ina238 -I -b 2 -a 0x44 -r 0.015 -q start
 svea_ina238 -I -b 2 -a 0x45 -r 0.015 -q start
 
 # MCP9600 thermocouple temperature sensor.
-mcp9600 -I -b 2 -a 0x67 -f start
+mcp9600 start -I -b 2 -a 0x67
 
 pca9685_pwm_out start -a 0x61 -b 2
 
