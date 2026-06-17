@@ -46,7 +46,7 @@ MCP9600::MCP9600(const I2CSPIDriverConfig &config) :
 
 	// Advertise immediately so the uORB instance is reserved and the ROS2 topic
 	// is always visible, even before the sensor is physically connected.
-	_sensor_temp_pub.advertise();
+	// _sensor_temp_pub.advertise();
 }
 
 MCP9600::~MCP9600()
@@ -106,7 +106,9 @@ int MCP9600::init()
 	}
 
 	_initialized = true;
-	ScheduleOnInterval(MCP9600_SAMPLE_INTERVAL_MS);
+
+        _sensor_temp_pub.advertise();
+        ScheduleOnInterval(MCP9600_SAMPLE_INTERVAL_MS);
 	return PX4_OK;
 }
 
@@ -140,18 +142,13 @@ bool MCP9600::read_temperature(float &temperature_c)
 void MCP9600::RunImpl()
 {
 	if (!_initialized) {
-		// Publish a sentinel so the uORB topic (and the ROS2 topic) stays visible
-		// even while the sensor is not yet connected.
-		_sensor_temp.timestamp   = hrt_absolute_time();
-		_sensor_temp.temperature = -273.15f;
-		_sensor_temp_pub.publish(_sensor_temp);
 
-		if (init() != PX4_OK) {
-			ScheduleDelayed(MCP9600_INIT_RETRY_US);
-		}
+             if (init() != PX4_OK) {
+                 ScheduleDelayed(MCP9600_INIT_RETRY_US);
+             }
 
-		return;
-	}
+        return;
+         }
 
 	perf_begin(_cycle_perf);
 

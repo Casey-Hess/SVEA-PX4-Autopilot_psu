@@ -5,28 +5,28 @@
 
 # Auto-start board I2C peripherals.
 # BQ769x2 starts first so pack power path policy is initialized before other devices.
-bq769x2 -I -b 2 -a 0x08 -t 1 -q start
-lsm6dsox -I -b 2 -a 0x6b -q start
-pcal6524 -I -b 2 -a 0x22 -M 0 -D 0x00ffffff -q start
-pcal6524 -I -b 2 -a 0x23 -M 24 -D 0x00ffffff -q start
+bq769x2 -I -b 2 -a 0x08 -t 1 -i 0 -q start
+lsm6dsox -I -b 2 -a 0x6b -i 1 -q start
+pcal6524 -I -b 2 -a 0x22 -M 0 -D 0x00ffffff -i 2 -q start
+pcal6524 -I -b 2 -a 0x23 -M 24 -D 0x00ffffff -i 3 -q start
 
 # SVEA INA226 current monitors on the powerboard:
 # 0x4E ESC current shunt: 1 mOhm, 0x4F servo buck shunt: 5 mOhm.
-svea_ina226 -I -b 2 -a 0x4E -r 0.001 -q start
-svea_ina226 -I -b 2 -a 0x4F -r 0.005 -q start
+svea_ina226 -I -b 2 -a 0x4E -r 0.001 -i 4 -q start
+svea_ina226 -I -b 2 -a 0x4F -r 0.005 -i 5 -q start
 
 # SVEA INA3221 current monitors on the powerboard:
 # 0x41 -> IN1 16 mOhm, IN2 1 mOhm, IN3 16 mOhm
 # 0x40 -> IN1/IN2/IN3 all 16 mOhm
-svea_ina3221 -I -b 2 -a 0x41 -x 0.016 -y 0.001 -z 0.016 -q start
-svea_ina3221 -I -b 2 -a 0x40 -r 0.016 -q start
+svea_ina3221 -I -b 2 -a 0x41 -x 0.016 -y 0.001 -z 0.016 -i 6 -q start
+svea_ina3221 -I -b 2 -a 0x40 -r 0.016 -i 7 -q start
 
 # SVEA INA238 current monitors: 0x44 and 0x45 claim power_monitor instances 8 and 9.
 # A brief delay lets the earlier INA226/INA3221 drivers complete their first
 # publish cycle so that uORB instance ordering is preserved.
 usleep 5000
-svea_ina238 -I -b 2 -a 0x44 -r 0.015 -q start
-svea_ina238 -I -b 2 -a 0x45 -r 0.015 -q start
+svea_ina238 -I -b 2 -a 0x44 -r 0.015 -i 8 -q start
+svea_ina238 -I -b 2 -a 0x45 -r 0.015 -i 9 -q start
 
 # MCP9600 thermocouple temperature sensor.
 usleep 5000
