@@ -24,12 +24,13 @@ svea_ina3221 -I -b 2 -a 0x40 -r 0.016 -q start
 # SVEA INA238 current monitors: 0x44 and 0x45 claim power_monitor instances 8 and 9.
 # A brief delay lets the earlier INA226/INA3221 drivers complete their first
 # publish cycle so that uORB instance ordering is preserved.
-#usleep 50000
+usleep 5000
 svea_ina238 -I -b 2 -a 0x44 -r 0.015 -q start
 svea_ina238 -I -b 2 -a 0x45 -r 0.015 -q start
 
 # MCP9600 thermocouple temperature sensor.
-mcp9600 -I -b 2 -a 0x67 start
+usleep 5000
+mcp9600 start -I -b 2 -a 0x67
 
 pca9685_pwm_out start -a 0x61 -b 2
 
