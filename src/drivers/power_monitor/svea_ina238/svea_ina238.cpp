@@ -50,6 +50,8 @@ SVEA_INA238::SVEA_INA238(const I2CSPIDriverConfig &config) :
 	_shunt_calibration = static_cast<uint16_t>(INA238_CONST * _current_lsb * _rshunt);
 
 	I2C::_retries = 5;
+
+	_pm_pub_topic.advertise();
 }
 
 SVEA_INA238::~SVEA_INA238()
