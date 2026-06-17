@@ -25,8 +25,9 @@ svea_ina3221 -I -b 2 -a 0x40 -r 0.016 -q start
 # A brief delay lets the earlier INA226/INA3221 drivers complete their first
 # publish cycle so that uORB instance ordering is preserved.
 usleep 50000
-svea_ina238 -I -b 2 -a 0x44 -r 0.015 -q start
-svea_ina238 -I -b 2 -a 0x45 -r 0.015 -q start
+svea_ina238 -f -I -b 2 -a 0x44 -r 0.015 -q start
+#usleep 500000
+svea_ina238 -f -I -b 2 -a 0x45 -r 0.015 -q start
 
 # MCP9600 thermocouple temperature sensor.
 usleep 50000
