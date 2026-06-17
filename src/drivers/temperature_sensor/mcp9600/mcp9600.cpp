@@ -115,7 +115,9 @@ int MCP9600::force_init()
 	int ret = init();
 
 	if (!_initialized) {
-		ScheduleDelayed(MCP9600_INIT_RETRY_US);
+		// Fire RunImpl immediately so the sentinel publish happens right away
+		// and the ROS2 topic becomes visible without a 500 ms delay.
+		ScheduleDelayed(5);
 	}
 
 	return ret;

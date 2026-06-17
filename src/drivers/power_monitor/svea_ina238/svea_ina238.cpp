@@ -50,10 +50,6 @@ SVEA_INA238::SVEA_INA238(const I2CSPIDriverConfig &config) :
 	_shunt_calibration = static_cast<uint16_t>(INA238_CONST * _current_lsb * _rshunt);
 
 	I2C::_retries = 5;
-
-	// Publish immediately so this uORB instance is reserved and the ROS2 topic
-	// is always visible, even before the sensor is physically connected.
-	publish_status(false, 0, 0);
 }
 
 SVEA_INA238::~SVEA_INA238()
@@ -152,7 +148,11 @@ int SVEA_INA238::force_init()
 void SVEA_INA238::start()
 {
 	ScheduleClear();
-	ScheduleDelayed(INA238_CONVERSION_INTERVAL);
+	// When the sensor is ready, delay one full conversion cycle before the first
+	// collect so the ADC result is valid (64 averages × 540 µs ≈ 35 ms).
+	// When not initialized, fire RunImpl immediately so the sentinel publish
+	// happens quickly and the ROS2 topic becomes visible without delay.
+	ScheduleDelayed(_initialized ? INA238_CONVERSION_INTERVAL : 5);
 }
 
 void SVEA_INA238::publish_status(bool valid, int16_t bus_raw, int16_t current_raw)
