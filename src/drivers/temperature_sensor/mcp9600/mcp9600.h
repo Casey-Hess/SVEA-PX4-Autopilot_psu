@@ -88,7 +88,7 @@ private:
 	bool read_temperature(float &temperature_c);
 
 	bool _initialized{false};
-        uORB::Publication<sensor_temp_s> _sensor_temp_pub{ORB_ID(sensor_temp)};
+        uORB::PublicationMulti<sensor_temp_s> _sensor_temp_pub{ORB_ID(sensor_temp)};
 	sensor_temp_s _sensor_temp{};
 
 	perf_counter_t _cycle_perf;
