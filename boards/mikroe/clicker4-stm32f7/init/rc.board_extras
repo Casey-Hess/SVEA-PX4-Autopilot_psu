@@ -40,7 +40,7 @@ mavlink uorb_tunnel add -t power_monitor -i 9 -r 4 -f
 
 # Configure PX4_UORB_TUNNEL sensor_temp forwarding.
 # Instance 0: MCP9600 thermocouple sensor.
-mavlink uorb_tunnel add -t sensor_temp -i 0 -r 4 -f
+mavlink uorb_tunnel add -t sensor_baro -i 0 -r 4 -f
 
 # WS281x/WS2815 on PC9 is available, but do not auto-start at boot.
 # Start manually when needed:

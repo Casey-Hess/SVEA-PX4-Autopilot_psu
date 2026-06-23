@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <drivers/device/i2c.h>
 #include <px4_platform_common/i2c_spi_buses.h>
-#include <uORB/topics/sensor_temp.h>
+#include <uORB/topics/sensor_baro.h>
 #include <uORB/PublicationMulti.hpp>
 #include <lib/perf/perf_counter.h>
 #include <drivers/drv_hrt.h>
@@ -88,8 +88,8 @@ private:
 	bool read_temperature(float &temperature_c);
 
 	bool _initialized{false};
-        uORB::PublicationMulti<sensor_temp_s> _sensor_temp_pub{ORB_ID(sensor_temp)};
-	sensor_temp_s _sensor_temp{};
+        uORB::PublicationMulti<sensor_baro_s> _sensor_baro_pub{ORB_ID(sensor_baro)};
+	sensor_baro_s _sensor_baro{};
 
 	perf_counter_t _cycle_perf;
 	perf_counter_t _comms_errors;

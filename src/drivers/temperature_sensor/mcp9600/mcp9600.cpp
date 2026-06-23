@@ -42,10 +42,10 @@ MCP9600::MCP9600(const I2CSPIDriverConfig &config) :
     _comms_errors(perf_alloc(PC_COUNT, MODULE_NAME": comms errors")),
     _collection_errors(perf_alloc(PC_COUNT, MODULE_NAME": collection errors"))
 {
-    _sensor_temp.device_id = get_device_id();
+    _sensor_baro.device_id = get_device_id();
 
     // CRITICAL: ensure uORB topic exists immediately so ROS2 bridge can see it
-    _sensor_temp_pub.advertise();
+    _sensor_baro_pub.advertise();
 }
 
 MCP9600::~MCP9600()
@@ -147,51 +147,56 @@ bool MCP9600::read_temperature(float &temperature_c)
 
 void MCP9600::RunImpl()
 {
-    perf_begin(_cycle_perf);
+	perf_begin(_cycle_perf);
 
-    // If not initialized, still publish a placeholder so ROS2 topic stays alive
-    if (!_initialized) {
-        _sensor_temp.timestamp = hrt_absolute_time();
-        _sensor_temp.temperature = NAN;
-        _sensor_temp_pub.publish(_sensor_temp);
+	const hrt_abstime now = hrt_absolute_time();
 
-        perf_end(_cycle_perf);
-        return;
-    }
+	// Publish placeholder if sensor is not initialized yet.
+	if (!_initialized) {
 
-    float temperature_c = 0.f;
+		_sensor_baro.timestamp = now;
+		_sensor_baro.timestamp_sample = now;
+		_sensor_baro.device_id = get_device_id();
 
-    if (read_temperature(temperature_c)) {
-        _sensor_temp.timestamp = hrt_absolute_time();
-        _sensor_temp.temperature = temperature_c;
-        _sensor_temp_pub.publish(_sensor_temp);
+		_sensor_baro.pressure = NAN;
+		_sensor_baro.temperature = NAN;
+		_sensor_baro.error_count = 0;
 
-    } else {
-        perf_count(_collection_errors);
-    }
+		_sensor_baro_pub.publish(_sensor_baro);
 
-    perf_end(_cycle_perf);
-}
+		perf_end(_cycle_perf);
+		return;
+	}
 
-void MCP9600::print_status()
-{
-    I2CSPIDriverBase::print_status();
+	float temperature_c = 0.f;
 
-    perf_print_counter(_cycle_perf);
-    perf_print_counter(_comms_errors);
-    perf_print_counter(_collection_errors);
+	if (read_temperature(temperature_c)) {
 
-    if (_initialized) {
-        float temperature_c = 0.f;
+		_sensor_baro.timestamp = now;
+		_sensor_baro.timestamp_sample = now;
+		_sensor_baro.device_id = get_device_id();
 
-        if (read_temperature(temperature_c)) {
-            PX4_INFO("temperature: %.4f °C", (double)temperature_c);
-        } else {
-            PX4_WARN("failed to read temperature");
-        }
+		// MCP9600 is temperature-only.
+		_sensor_baro.pressure = NAN;
+		_sensor_baro.temperature = temperature_c;
+		_sensor_baro.error_count = 0;
 
-    } else {
-        PX4_INFO("Not initialized. Retrying every %d ms.",
-                 MCP9600_INIT_RETRY_US / 1000);
-    }
+		_sensor_baro_pub.publish(_sensor_baro);
+
+	} else {
+
+		perf_count(_collection_errors);
+
+		_sensor_baro.timestamp = now;
+		_sensor_baro.timestamp_sample = now;
+		_sensor_baro.device_id = get_device_id();
+
+		_sensor_baro.pressure = NAN;
+		_sensor_baro.temperature = NAN;
+		_sensor_baro.error_count++;
+
+		_sensor_baro_pub.publish(_sensor_baro);
+	}
+
+	perf_end(_cycle_perf);
 }
