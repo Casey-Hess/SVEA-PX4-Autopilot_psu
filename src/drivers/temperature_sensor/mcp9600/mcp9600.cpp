@@ -200,3 +200,14 @@ void MCP9600::RunImpl()
 
 	perf_end(_cycle_perf);
 }
+
+void MCP9600::print_status()
+{
+	I2CSPIDriverBase::print_status();
+
+	PX4_INFO("initialized: %s", _initialized ? "true" : "false");
+
+	perf_print_counter(_cycle_perf);
+	perf_print_counter(_comms_errors);
+	perf_print_counter(_collection_errors);
+}
