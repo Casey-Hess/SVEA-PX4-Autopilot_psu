@@ -6,7 +6,7 @@
 # Auto-start board I2C peripherals.
 # BQ769x2 starts first so pack power path policy is initialized before other devices.
 bq769x2 -I -b 2 -a 0x08 -t 1 -q start
-lsm6dsox -I -b 2 -a 0x6b -i 1 -q start
+lsm6dsox -I -b 2 -a 0x6b -q start
 pcal6524 -I -b 2 -a 0x22 -M 0 -D 0x00ffffff -q start
 pcal6524 -I -b 2 -a 0x23 -M 24 -D 0x00ffffff -q start
 
