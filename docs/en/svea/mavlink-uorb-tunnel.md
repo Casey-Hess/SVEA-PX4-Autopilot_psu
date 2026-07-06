@@ -12,14 +12,14 @@ This fork adds `PX4_UORB_TUNNEL` forwarding to move selected uORB topics over MA
 From `boards/mikroe/clicker4-stm32f7/init/rc.board_extras`:
 
 ```sh
-mavlink uorb_tunnel add -t power_monitor -i 0 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 1 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 2 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 3 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 4 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 5 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 6 -r 4 -f
-mavlink uorb_tunnel add -t power_monitor -i 7 -r 4 -f
+mavlink uorb_tunnel add -t power_monitor -i 0 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 1 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 2 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 3 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 4 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 5 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 6 -r 10 -f
+mavlink uorb_tunnel add -t power_monitor -i 7 -r 10 -f
 ```
 
 Instance plan:
