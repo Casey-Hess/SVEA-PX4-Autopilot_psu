@@ -61,7 +61,7 @@ using namespace time_literals;
 /* Temperature LSB: 0.0625 °C per count (16-bit signed, 12-bit integer + 4-bit fraction) */
 #define MCP9600_TEMP_LSB            0.0625f
 
-#define MCP9600_SAMPLE_INTERVAL_MS  200_ms   /* 5 Hz */
+#define MCP9600_SAMPLE_INTERVAL_MS  100_ms   /* 10 Hz */
 #define MCP9600_INIT_RETRY_US       500000
 
 class MCP9600 : public device::I2C, public I2CSPIDriver<MCP9600>

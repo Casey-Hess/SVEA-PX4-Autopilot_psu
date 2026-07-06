@@ -63,14 +63,13 @@ using namespace time_literals;
 #define INA238_RST_BIT                 (1 << 15)
 #define INA238_ADCRANGE_HIGH           0x0000   /* ±163.84 mV shunt range */
 
-/* ADCCONFIG: shunt+bus continuous, 540 us CT, 64 averages */
-#define INA238_MODE_SHUNT_BUS_CONT     (0xF << 12)
+/* ADCCONFIG: shunt+bus continuous (no temperature phase), 540 us CT, 64 averages */
+#define INA238_MODE_SHUNT_BUS_CONT     (0xB << 12)
 #define INA238_VBUSCT_540US            (0x4 << 9)
 #define INA238_VSHCT_540US             (0x4 << 6)
-#define INA238_VTCT_540US              (0x4 << 3)
 #define INA238_AVERAGES_64             (0x3 << 0)
 #define INA238_ADCCONFIG_DEFAULT \
-	(INA238_MODE_SHUNT_BUS_CONT | INA238_VBUSCT_540US | INA238_VSHCT_540US | INA238_VTCT_540US | INA238_AVERAGES_64)
+	(INA238_MODE_SHUNT_BUS_CONT | INA238_VBUSCT_540US | INA238_VSHCT_540US | INA238_AVERAGES_64)
 
 #define INA238_SAMPLE_FREQUENCY_HZ     10
 #define INA238_SAMPLE_INTERVAL_US      (1_s / INA238_SAMPLE_FREQUENCY_HZ)
