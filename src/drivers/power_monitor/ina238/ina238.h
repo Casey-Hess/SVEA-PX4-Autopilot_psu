@@ -148,7 +148,11 @@ private:
 	register_config_t _register_cfg[size_register_cfg] {
 		// Register | Set bits, Clear bits
 		{ Register::CONFIG, 0, 0}, // will be set dynamically
-		{ Register::ADCCONFIG, MODE_TEMP_SHUNT_BUS_CONT |  VBUSCT_540US |  VSHCT_540US | VTCT_540US | AVERAGES_64},
+		// VSHCT=VBUSCT=2074us, AVG=16 -> t_window = 16 * (2074+2074)us = 66.368 ms, within 0.45%
+		// of 4 full periods of a 60 Hz PWM load (4 / 60 Hz = 66.667 ms), so on/off intervals are
+		// counted evenly in the hardware average, with ~34 ms of margin under the 100 ms (10 Hz)
+		// sample interval before a conversion-ready deadline is missed.
+		{ Register::ADCCONFIG, MODE_SHUNT_BUS_CONT | VBUSCT_2074US | VSHCT_2074US | AVERAGES_16},
 		{ Register::SHUNT_CAL, 0, 0}	// will be set dynamically
 	};
 
