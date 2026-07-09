@@ -42,13 +42,6 @@ mavlink uorb_tunnel add -t power_monitor -i 9 -r 10 -f
 # Instance 0: MCP9600 thermocouple sensor.
 mavlink uorb_tunnel add -t sensor_baro -i 0 -r 10 -f
 
-# Configure PX4_UORB_TUNNEL battery_status forwarding.
-# Instance 0: sole bq769x2 smart battery (rc.board_sensors starts one at -t 1).
-# Forwarding the raw uORB struct gives the companion computer the full-precision
-# float `remaining` field, instead of the whole-percent int8 battery_remaining
-# it would otherwise only see via the MAVLink BATTERY_STATUS message.
-mavlink uorb_tunnel add -t battery_status -i 0 -r 10 -f
-
 # WS281x/WS2815 on PC9 is available, but do not auto-start at boot.
 # Start manually when needed:
 #   neopixel start -n 1
