@@ -72,7 +72,10 @@ private:
 				bat_msg.id = battery_status.id - 1;
 				bat_msg.battery_function = MAV_BATTERY_FUNCTION_ALL;
 				bat_msg.type = MAV_BATTERY_TYPE_LIPO;
-				bat_msg.current_consumed = (battery_status.connected) ? battery_status.discharged_mah : -1;
+				bat_msg.current_consumed = (battery_status.connected
+							     && PX4_ISFINITE(battery_status.discharged_mah)
+							     && battery_status.discharged_mah >= 0.f) ?
+							    static_cast<int32_t>(battery_status.discharged_mah) : -1;
 				bat_msg.current_battery = (battery_status.connected) ? battery_status.current_a * 100 : -1;
 				bat_msg.battery_remaining = (battery_status.connected) ? roundf(battery_status.remaining * 100.f) : -1;
 
