@@ -1,0 +1,33 @@
+diff --git a/mavros/src/plugins/sys_status.cpp b/mavros/src/plugins/sys_status.cpp
+index e36a96d..7b0bcdb 100644
+--- a/mavros/src/plugins/sys_status.cpp
++++ b/mavros/src/plugins/sys_status.cpp
+@@ -1123,9 +1123,25 @@ private:
+     batt_msg.header.stamp = node->now();
+     batt_msg.voltage = battery_voltage;
+     batt_msg.current = -(bs.current_battery / 100.0f);                 // 10 mA
+-    batt_msg.charge = NAN;
+-    batt_msg.capacity = NAN;
+-    batt_msg.design_capacity = NAN;
++
++    // current_consumed is coulomb-counted mAh since boot/connect, -1 if unknown.
++    batt_msg.charge = (bs.current_consumed >= 0) ?
++      (bs.current_consumed / 1000.0f) : NAN;                           // mAh -> Ah
++
++    // BATTERY_STATUS has no pack-capacity field, but the firmware's
++    // battery_remaining (%) is derived from the same consumed-charge/capacity
++    // ratio, so the full pack capacity can be recovered algebraically:
++    //   remaining = 1 - charge / capacity  =>  capacity = charge / (1 - remaining)
++    // battery_remaining == 100 would divide by zero, so it's excluded.
++    if (bs.current_consumed >= 0 && bs.battery_remaining >= 0 && bs.battery_remaining < 100) {
++      const float implied_capacity = batt_msg.charge / (1.0f - bs.battery_remaining / 100.0f);
++      batt_msg.capacity = implied_capacity;
++      batt_msg.design_capacity = implied_capacity;
++    } else {
++      batt_msg.capacity = NAN;
++      batt_msg.design_capacity = NAN;
++    }
++
+     batt_msg.percentage = bs.battery_remaining / 100.0f;
+     batt_msg.power_supply_status = BatteryMsg::POWER_SUPPLY_STATUS_DISCHARGING;
+     batt_msg.power_supply_health = BatteryMsg::POWER_SUPPLY_HEALTH_UNKNOWN;
