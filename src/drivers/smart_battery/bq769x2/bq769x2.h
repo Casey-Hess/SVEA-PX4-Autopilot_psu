@@ -128,6 +128,7 @@ private:
 	hrt_abstime _last_integration_us{0};
 	float _discharged_mah{0.f};
 	float _discharged_wh{0.f};
+	float _current_filt_a{NAN};   // EMA of CURRENT_CC2, seeded on first valid sample
 	bool _soc_seeded_from_voltage{false};
 
 	uint16_t _device_number{0};

@@ -955,7 +955,20 @@ int BQ769x2::collectAndPublish()
 		report.current_a = -report.current_a;
 	}
 
-	report.current_average_a = report.current_a;
+	// Raw CURRENT_CC2 refreshes on the chip's own ADC scan cadence, slower than our
+	// SAMPLE_INTERVAL_US poll rate — repeated reads of a stale value followed by a jump
+	// look like noise. Low-pass filter it before it's used for reporting/integration.
+	if (!PX4_ISFINITE(_current_filt_a)) {
+		_current_filt_a = report.current_a;
+
+	} else {
+		const float dt_s = SAMPLE_INTERVAL_US * 1e-6f;
+		const float tau_s = 0.3f;                       // ~ chip CC2 refresh interval
+		const float alpha = dt_s / (tau_s + dt_s);
+		_current_filt_a += alpha * (report.current_a - _current_filt_a);
+	}
+
+	report.current_average_a = _current_filt_a;
 
 	// Coulomb counter integration (LibreSolar-style): integrate signed current
 	// over elapsed time and track consumed capacity/energy.
@@ -964,7 +977,7 @@ int BQ769x2::collectAndPublish()
 
 		// Ignore long gaps to avoid large jumps after resets/restarts.
 		if (dt_s > 0.f && dt_s < 1.f) {
-			const float signed_current_a = (fabsf(report.current_a) > 0.05f) ? report.current_a : 0.f;
+			const float signed_current_a = (fabsf(report.current_average_a) > 0.05f) ? report.current_average_a : 0.f;
 
 			_discharged_mah += (signed_current_a * 1000.f) * (dt_s / 3600.f);
 			_discharged_mah = math::max(_discharged_mah, 0.f);
