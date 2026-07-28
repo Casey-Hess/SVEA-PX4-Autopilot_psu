@@ -125,10 +125,12 @@ private:
 	uint8_t _cell_count{0};
 	bool _configure_on_startup{false};
 	bool _connected{false};
-	hrt_abstime _last_integration_us{0};
+	hrt_abstime _last_integration_us{0};   ///< timestamp of the last genuinely new CURRENT_CC2 sample
 	float _discharged_mah{0.f};
 	float _discharged_wh{0.f};
 	float _current_filt_a{NAN};   // EMA of CURRENT_CC2, seeded on first valid sample
+	int16_t _last_raw_current_cc2{0};
+	bool _last_raw_current_valid{false};   ///< true once a raw CURRENT_CC2 reading has been seen
 	bool _soc_seeded_from_voltage{false};
 
 	uint16_t _device_number{0};
